@@ -14,6 +14,7 @@ import com.facebook.login.LoginManager;
 /** FlutterFacebookSdkPlugin */
 public class FlutterFacebookSdkPlugin implements MethodCallHandler {
   private LoginBehavior loginBehavior;
+  private LoginManager loginManager = LoginManager.getInstance();
 
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
@@ -35,6 +36,21 @@ public class FlutterFacebookSdkPlugin implements MethodCallHandler {
   private void isLoggedIn(MethodCall call, Result result) {
     AccessToken accessToken = AccessToken.getCurrentAccessToken();
     boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+
+//    //  LoginManager
+//    loginManager.getDefaultAudience();
+//    loginManager.getAuthType();
+//    loginManager.getLoginBehavior();
+//    loginManager.logInWithPublishPermissions();
+//    loginManager.logInWithReadPermissions();
+//    loginManager.logOut();
+//    loginManager.registerCallback();
+//    loginManager.setAuthType();
+//    loginManager.setDefaultAudience();
+//    loginManager.setLoginBehavior();
+//    loginManager.unregisterCallback();
+
+
     result.success(isLoggedIn);
   }
 
