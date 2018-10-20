@@ -10,4 +10,9 @@ class FlutterFacebookSdk {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     return version;
   }
+
+  static Future<bool> isLoggedIn() async {
+    bool loggedIn = await _channel.invokeMethod("isLoggedIn");
+    return loggedIn;
+  }
 }

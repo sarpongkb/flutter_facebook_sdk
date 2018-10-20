@@ -13,6 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  bool _loggedIn = true;
 
   @override
   void initState() {
@@ -23,9 +24,11 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;
+    bool loggedIn;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       platformVersion = await FlutterFacebookSdk.platformVersion;
+      loggedIn = await FlutterFacebookSdk.isLoggedIn();
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -37,6 +40,7 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion;
+      _loggedIn = loggedIn;
     });
   }
 
@@ -47,8 +51,15 @@ class _MyAppState extends State<MyApp> {
         appBar: new AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: new Center(
-          child: new Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: <Widget>[
+             Center(
+              child: Text('Running on: $_platformVersion\n'),
+            ),
+             Center(
+               child: Text('Is Logged In: $_loggedIn\n'),
+             ),
+          ],
         ),
       ),
     );

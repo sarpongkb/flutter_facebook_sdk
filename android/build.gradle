@@ -5,6 +5,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+//        mavenCentral()
     }
 
     dependencies {
@@ -16,6 +17,7 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+//        mavenCentral()
     }
 }
 
@@ -31,4 +33,13 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+}
+
+dependencies {
+    implementation 'com.facebook.android:facebook-core:[4,5)'
+    implementation 'com.facebook.android:facebook-login:[4,5)'
+    implementation 'com.facebook.android:facebook-share:[4,5)'
+    implementation 'com.facebook.android:facebook-places:[4,5)'
+    implementation 'com.facebook.android:facebook-messenger:[4,5)'
+    implementation 'com.facebook.android:facebook-applinks:[4,5)'
 }
