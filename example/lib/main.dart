@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_sdk/flutter_facebook_sdk.dart';
+import 'package:flutter_facebook_sdk/facebook_login.dart';
 
 void main() => runApp(new MyApp());
 
@@ -30,10 +30,10 @@ class _MyAppState extends State<MyApp> {
 
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await FacebookSdk.platformVersion;
+      platformVersion = await FacebookLogin.platformVersion;
       loginResult =
-          await FacebookSdk.logInWithReadPermissions(["public_profile"]);
-      loggedIn = await FacebookSdk.isLoggedIn();
+          await FacebookLogin.logInWithReadPermissions(["public_profile"]);
+      loggedIn = await FacebookLogin.isLoggedIn();
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }

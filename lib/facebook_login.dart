@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
-class FacebookSdk {
+class FacebookLogin {
   static const MethodChannel _channel =
-      MethodChannel('com.sarpongkb/flutter_facebook_sdk');
+      MethodChannel('com.sarpongkb/flutter_facebook_sdk/facebook_login');
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');

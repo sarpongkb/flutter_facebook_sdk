@@ -11,7 +11,7 @@ FBSDKLoginManager* loginManager;
   
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"com.sarpongkb/flutter_facebook_sdk"
+      methodChannelWithName:@"com.sarpongkb/flutter_facebook_sdk/facebook_login"
             binaryMessenger:[registrar messenger]];
   FlutterFacebookSdkPlugin* instance = [[FlutterFacebookSdkPlugin alloc] init];
   [registrar addApplicationDelegate:instance];
@@ -78,10 +78,10 @@ FBSDKLoginManager* loginManager;
     NSArray* readPermissions = call.arguments[@"readPermissions"];
     [loginManager logInWithReadPermissions:readPermissions fromViewController:nil handler:^(FBSDKLoginManagerLoginResult* loginResult, NSError* loginError) {
         if (loginError != nil) {
-            [FlutterError errorWithCode:@"LOGIN_ERROR" message:[loginError localizedDescription] details:nil];
+            result(@{@"status": @"ERROR", @"errorMessage": [loginError localizedDescription]});
         } else if ([loginResult isCancelled]) {
             [loginManager logOut];
-            result(@{@"status": @"CANCELLED"});
+            result(@{@"status": @"CANCELED"});
         } else {
             result(@{ @"status": @"LOGGED_IN",
                       @"accessToken": [self parseAccessToken:[loginResult token]]

@@ -14,9 +14,9 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** FlutterFacebookSdkPlugin */
 public class FlutterFacebookSdkPlugin implements MethodCallHandler {
-//  private LoginBehavior loginBehavior;
+  // private LoginBehavior loginBehavior;
   private final Registrar registrar;
-  private final CallbackManager callbackManager =  CallbackManager.Factory.create();
+  private final CallbackManager callbackManager = CallbackManager.Factory.create();
   private final LoginResultDelegate loginResultDelegate = new LoginResultDelegate(callbackManager);
 
   public FlutterFacebookSdkPlugin(Registrar registrar) {
@@ -27,7 +27,8 @@ public class FlutterFacebookSdkPlugin implements MethodCallHandler {
 
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "com.sarpongkb/flutter_facebook_sdk");
+    final MethodChannel channel = new MethodChannel(registrar.messenger(),
+        "com.sarpongkb/flutter_facebook_sdk/facebook_login");
     channel.setMethodCallHandler(new FlutterFacebookSdkPlugin(registrar));
   }
 
@@ -48,19 +49,18 @@ public class FlutterFacebookSdkPlugin implements MethodCallHandler {
     AccessToken accessToken = AccessToken.getCurrentAccessToken();
     boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 
-//    //  LoginManager
-//    loginManager.getDefaultAudience();
-//    loginManager.getAuthType();
-//    loginManager.getLoginBehavior();
-//    loginManager.logInWithPublishPermissions();
-//    loginManager.logInWithReadPermissions();
-//    loginManager.logOut();
-//    loginManager.registerCallback();
-//    loginManager.setAuthType();
-//    loginManager.setDefaultAudience();
-//    loginManager.setLoginBehavior();
-//    loginManager.unregisterCallback();
-
+    // // LoginManager
+    // loginManager.getDefaultAudience();
+    // loginManager.getAuthType();
+    // loginManager.getLoginBehavior();
+    // loginManager.logInWithPublishPermissions();
+    // loginManager.logInWithReadPermissions();
+    // loginManager.logOut();
+    // loginManager.registerCallback();
+    // loginManager.setAuthType();
+    // loginManager.setDefaultAudience();
+    // loginManager.setLoginBehavior();
+    // loginManager.unregisterCallback();
 
     result.success(isLoggedIn);
   }

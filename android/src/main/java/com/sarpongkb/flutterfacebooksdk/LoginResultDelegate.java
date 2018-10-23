@@ -36,7 +36,7 @@ public class LoginResultDelegate implements FacebookCallback<LoginResult>, Plugi
         accessToken.put("declinedPermissions", new ArrayList<>(loginResult.getAccessToken().getDeclinedPermissions()));
 
         HashMap<String, Object> res = new HashMap<>();
-        res.put("status", "loggedIn");
+        res.put("status", "LOGGED_IN");
         res.put("accessToken", accessToken);
         result.success(res);
 
@@ -45,13 +45,16 @@ public class LoginResultDelegate implements FacebookCallback<LoginResult>, Plugi
     @Override
     public void onCancel() {
         HashMap<String, Object> res = new HashMap<>();
-        res.put("status", "cancelledByUser");
+        res.put("status", "CANCELED");
         result.success(res);
     }
 
     @Override
     public void onError(FacebookException error) {
-        result.error("Login Error", error.getLocalizedMessage(), null);
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("status", "ERROR");
+        res.put("errorMessage", error.getLocalizedMessage());
+        result.success(res);
     }
 
     @Override
