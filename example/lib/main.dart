@@ -16,7 +16,6 @@ class _MyAppState extends State<MyApp> {
   bool _loggedIn;
   dynamic _loginResult;
 
-
   @override
   void initState() {
     super.initState();
@@ -31,9 +30,10 @@ class _MyAppState extends State<MyApp> {
 
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await FlutterFacebookSdk.platformVersion;
-      loginResult = await FlutterFacebookSdk.logInWithReadPermissions(["public_profile"]);
-      loggedIn = await FlutterFacebookSdk.isLoggedIn();
+      platformVersion = await FacebookSdk.platformVersion;
+      loginResult =
+          await FacebookSdk.logInWithReadPermissions(["public_profile"]);
+      loggedIn = await FacebookSdk.isLoggedIn();
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -59,15 +59,15 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: <Widget>[
-             Center(
+            Center(
               child: Text('Running on: $_platformVersion\n'),
             ),
-             Center(
-               child: Text('Is Logged In: $_loggedIn\n'),
-             ),
-             Center(
-               child: Text('Login results: $_loginResult\n'),
-             ),
+            Center(
+              child: Text('Is Logged In: $_loggedIn\n'),
+            ),
+            Center(
+              child: Text('Login results: $_loginResult\n'),
+            ),
           ],
         ),
       ),
