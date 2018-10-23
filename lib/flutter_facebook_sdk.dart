@@ -15,4 +15,9 @@ class FlutterFacebookSdk {
     bool loggedIn = await _channel.invokeMethod("isLoggedIn");
     return loggedIn;
   }
+
+  static Future<Map<dynamic, dynamic>> logInWithReadPermissions(List<String> permissions) async {
+    Map<dynamic, dynamic> loginResult = await _channel.invokeMethod("logInWithReadPermissions", {"readPermissions": permissions},);
+    return loginResult;
+  }
 }

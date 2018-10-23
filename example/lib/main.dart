@@ -13,7 +13,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  bool _loggedIn = true;
+  bool _loggedIn;
+  dynamic _loginResult;
+
 
   @override
   void initState() {
@@ -25,9 +27,12 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     String platformVersion;
     bool loggedIn;
+    dynamic loginResult;
+
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       platformVersion = await FlutterFacebookSdk.platformVersion;
+      loginResult = await FlutterFacebookSdk.logInWithReadPermissions(["public_profile"]);
       loggedIn = await FlutterFacebookSdk.isLoggedIn();
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
@@ -41,6 +46,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion;
       _loggedIn = loggedIn;
+      _loginResult = loginResult;
     });
   }
 
@@ -58,6 +64,9 @@ class _MyAppState extends State<MyApp> {
             ),
              Center(
                child: Text('Is Logged In: $_loggedIn\n'),
+             ),
+             Center(
+               child: Text('Login results: $_loginResult\n'),
              ),
           ],
         ),
