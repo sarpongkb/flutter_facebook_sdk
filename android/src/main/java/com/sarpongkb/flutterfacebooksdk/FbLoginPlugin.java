@@ -21,63 +21,69 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 public class FbLoginPlugin  implements MethodCallHandler {
-  private static final String channelName = "com.sarpongkb/flutter_facebook_sdk/fb_login";
+  private static final String CHANNEL_NAME = "com.sarpongkb/flutter_facebook_sdk/fb_login";
+  private static final String DONE = "DONE";
 
-  // private LoginBehavior loginBehavior;
   private final Registrar registrar;
   private final CallbackManager callbackManager = CallbackManager.Factory.create();
-  private final ResultDelegate loginResultDelegate = new ResultDelegate(callbackManager);
+  private final ResultDelegate resultDelegate = new ResultDelegate(callbackManager);
 
   public FbLoginPlugin(Registrar registrar) {
     this.registrar = registrar;
-    this.registrar.addActivityResultListener(loginResultDelegate);
-    LoginManager.getInstance().registerCallback(callbackManager, loginResultDelegate);
+    this.registrar.addActivityResultListener(resultDelegate);
+    LoginManager.getInstance().registerCallback(callbackManager, resultDelegate);
   }
 
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), channelName);
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(new FbLoginPlugin(registrar));
   }
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
-      if (call.method.equals("isLoggedIn")) {
-          isLoggedIn(call, result);
+      if (call.method.equals("getCurrentAccessToken")) {
+          getCurrentAccessToken(result);
+      } else if (call.method.equals("isLoggedIn")) {
+        isLoggedIn(result);
+      } else if (call.method.equals("logInWithPublishPermissions")) {
+        logInWithPublishPermissions(call, result);
       } else if (call.method.equals("logInWithReadPermissions")) {
           logInWithReadPermissions(call, result);
+      } else if (call.method.equals("logOut")) {
+        logOut(result);
       } else {
           result.notImplemented();
       }
   }
 
+  private void getCurrentAccessToken(Result result) {
+    AccessToken token = AccessToken.getCurrentAccessToken();
+    result.success(token == null ? null : FbAccessToken.parsedToken(token));
+  }
 
-  private void isLoggedIn(MethodCall call, Result result) {
+  private void isLoggedIn(Result result) {
       AccessToken accessToken = AccessToken.getCurrentAccessToken();
       boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
-
-      // // LoginManager
-      // loginManager.getDefaultAudience();
-      // loginManager.getAuthType();
-      // loginManager.getLoginBehavior();
-      // loginManager.logInWithPublishPermissions();
-      // loginManager.logInWithReadPermissions();
-      // loginManager.logOut();
-      // loginManager.registerCallback();
-      // loginManager.setAuthType();
-      // loginManager.setDefaultAudience();
-      // loginManager.setLoginBehavior();
-      // loginManager.unregisterCallback();
-
       result.success(isLoggedIn);
   }
 
-  private void logInWithReadPermissions(MethodCall call, final Result result) {
-    loginResultDelegate.setResult(result);
-    List<String> readPermissions = call.argument("readPermissions");
-    LoginManager.getInstance().logInWithReadPermissions(registrar.activity(), readPermissions);
+  private void logInWithPublishPermissions(MethodCall call, final Result result) {
+    resultDelegate.setResult(result);
+    List<String> permissions = call.argument("permissions");
+    LoginManager.getInstance().logInWithPublishPermissions(registrar.activity(), permissions);
   }
 
+  private void logInWithReadPermissions(MethodCall call, final Result result) {
+    resultDelegate.setResult(result);
+    List<String> permissions = call.argument("permissions");
+    LoginManager.getInstance().logInWithReadPermissions(registrar.activity(), permissions);
+  }
+
+  private void logOut(Result result) {
+    LoginManager.getInstance().logOut();
+    result.success(DONE);
+  }
 
   private static class ResultDelegate implements FacebookCallback<LoginResult>, PluginRegistry.ActivityResultListener {
     private Result result;
@@ -119,4 +125,15 @@ public class FbLoginPlugin  implements MethodCallHandler {
       return callbackManager.onActivityResult(i, i1, intent);
     }
   }
+
+
+//  private static class Behavior {
+//    NATIVE_WITH_FALLBACK
+//    NATIVE_ONLY
+//    KATANA_ONLY
+//    WEB_ONLY
+//    WEB_VIEW_ONLY
+//    DIALOG_ONLY
+//    DEVICE_AUTH
+//  }
 }
