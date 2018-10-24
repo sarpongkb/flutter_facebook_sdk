@@ -28,15 +28,13 @@ public class FlutterFacebookSdkPlugin implements MethodCallHandler {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(),
-        "com.sarpongkb/flutter_facebook_sdk/facebook_login");
+        "com.sarpongkb/flutter_facebook_sdk/fb_login");
     channel.setMethodCallHandler(new FlutterFacebookSdkPlugin(registrar));
   }
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
-    } else if (call.method.equals("isLoggedIn")) {
+    if (call.method.equals("isLoggedIn")) {
       isLoggedIn(call, result);
     } else if (call.method.equals("logInWithReadPermissions")) {
       onLogInWithReadPermissions(call, result);

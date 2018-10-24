@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_sdk/facebook_login.dart';
+import 'package:flutter_facebook_sdk/fb_login.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => new _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   bool _loggedIn;
   dynamic _loginResult;
 
@@ -24,18 +23,16 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
     bool loggedIn;
     dynamic loginResult;
 
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await FacebookLogin.platformVersion;
       loginResult =
-          await FacebookLogin.logInWithReadPermissions(["public_profile"]);
-      loggedIn = await FacebookLogin.isLoggedIn();
+          await FbLogin.logInWithReadPermissions(["public_profile"]);
+      loggedIn = await FbLogin.isLoggedIn();
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      print('Failed to get platform version.');
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -44,7 +41,6 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
       _loggedIn = loggedIn;
       _loginResult = loginResult;
     });
@@ -52,16 +48,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
         body: Column(
           children: <Widget>[
-            Center(
-              child: Text('Running on: $_platformVersion\n'),
-            ),
             Center(
               child: Text('Is Logged In: $_loggedIn\n'),
             ),

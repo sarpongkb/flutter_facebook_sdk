@@ -2,6 +2,7 @@ package com.sarpongkb.flutterfacebooksdk;
 
 import android.content.Intent;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -27,13 +28,17 @@ public class LoginResultDelegate implements FacebookCallback<LoginResult>, Plugi
 
     @Override
     public void onSuccess(LoginResult loginResult) {
+        AccessToken resToken = loginResult.getAccessToken();
+
         HashMap<String, Object> accessToken = new HashMap<>();
-        accessToken.put("userId", loginResult.getAccessToken().getUserId());
+        accessToken.put("appId", resToken.getApplicationId());
+        accessToken.put("declinedPermissions", new ArrayList<>(resToken.getDeclinedPermissions()));
+        accessToken.put("expirationTime", resToken.getExpires().getTime());
         accessToken.put("isExpired", loginResult.getAccessToken().isExpired());
-        accessToken.put("tokenString", loginResult.getAccessToken().getToken());
-        accessToken.put("expirationDate", loginResult.getAccessToken().getExpires().toString());
-        accessToken.put("grantedPermissions", new ArrayList<>(loginResult.getAccessToken().getPermissions()));
-        accessToken.put("declinedPermissions", new ArrayList<>(loginResult.getAccessToken().getDeclinedPermissions()));
+        accessToken.put("permissions", new ArrayList<>(resToken.getPermissions()));
+        accessToken.put("refreshTime", resToken.getLastRefresh().getTime());
+        accessToken.put("tokenString", resToken.getToken());
+        accessToken.put("userId", resToken.getUserId());
 
         HashMap<String, Object> res = new HashMap<>();
         res.put("status", "LOGGED_IN");

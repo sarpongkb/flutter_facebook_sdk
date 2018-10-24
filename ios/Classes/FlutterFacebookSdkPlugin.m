@@ -11,7 +11,7 @@ FBSDKLoginManager* loginManager;
   
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"com.sarpongkb/flutter_facebook_sdk/facebook_login"
+      methodChannelWithName:@"com.sarpongkb/flutter_facebook_sdk/fb_login"
             binaryMessenger:[registrar messenger]];
   FlutterFacebookSdkPlugin* instance = [[FlutterFacebookSdkPlugin alloc] init];
   [registrar addApplicationDelegate:instance];
@@ -47,9 +47,7 @@ FBSDKLoginManager* loginManager;
   
   
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else if ([@"isLoggedIn" isEqualToString:call.method]) {
+  if ([@"isLoggedIn" isEqualToString:call.method]) {
     [self isLoggedIn:call result:result];
   } else if ([@"getCurrentAccessToken" isEqualToString:call.method]) {
       [self onGetCurrentAccessToken:call result:result];
@@ -92,12 +90,16 @@ FBSDKLoginManager* loginManager;
 
 
 - (NSDictionary*) parseAccessToken:(FBSDKAccessToken*)token {
-    return token == nil ? @{} : @{ @"expirationDate": [[token expirationDate] description],
+    return token == nil ? @{} : @{ @"appId": [token appID],
+                                   @"declinedPermissions": [[token declinedPermissions] allObjects],
+                                   @"expirationTime": [NSNumber numberWithInteger:
+                                                      [[token expirationDate] timeIntervalSince1970]],
                                    @"isExpired": [NSNumber numberWithBool:[token isExpired]],
+                                   @"permissions": [[token permissions] allObjects],
+                                   @"refreshTime": [NSNumber numberWithInteger:
+                                                    [[token refreshDate] timeIntervalSince1970]],
                                    @"tokenString": [token tokenString],
                                    @"userId": [token userID],
-                                   @"permissions": [[token permissions] allObjects],
-                                   @"declinedPermissions": [[token declinedPermissions] allObjects]
                                    };
 }
 
