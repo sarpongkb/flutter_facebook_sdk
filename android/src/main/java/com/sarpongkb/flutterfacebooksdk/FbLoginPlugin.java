@@ -1,11 +1,13 @@
 package com.sarpongkb.flutterfacebooksdk;
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -71,12 +73,16 @@ public class FbLoginPlugin  implements MethodCallHandler {
   private void logInWithPublishPermissions(MethodCall call, final Result result) {
     resultDelegate.setResult(result);
     List<String> permissions = call.argument("permissions");
+    String behavior = call.argument("behavior");
+    LoginManager.getInstance().setLoginBehavior(loginBehaviorFromString(behavior));
     LoginManager.getInstance().logInWithPublishPermissions(registrar.activity(), permissions);
   }
 
   private void logInWithReadPermissions(MethodCall call, final Result result) {
     resultDelegate.setResult(result);
     List<String> permissions = call.argument("permissions");
+    String behavior = call.argument("behavior");
+    LoginManager.getInstance().setLoginBehavior(loginBehaviorFromString(behavior));
     LoginManager.getInstance().logInWithReadPermissions(registrar.activity(), permissions);
   }
 
@@ -126,14 +132,24 @@ public class FbLoginPlugin  implements MethodCallHandler {
     }
   }
 
-
-//  private static class Behavior {
-//    NATIVE_WITH_FALLBACK
-//    NATIVE_ONLY
-//    KATANA_ONLY
-//    WEB_ONLY
-//    WEB_VIEW_ONLY
-//    DIALOG_ONLY
-//    DEVICE_AUTH
-//  }
+  private LoginBehavior loginBehaviorFromString(String behavior) {
+    switch (behavior) {
+      case "NATIVE_ONLY":
+        return LoginBehavior.NATIVE_ONLY;
+      case "NATIVE_WITH_FALLBACK":
+        return LoginBehavior.NATIVE_WITH_FALLBACK;
+      case "WEB_ONLY":
+        return LoginBehavior.WEB_ONLY;
+      case "WEB_VIEW_ONLY":
+        return LoginBehavior.WEB_VIEW_ONLY;
+      case "DEVICE_AUTH":
+        return LoginBehavior.DEVICE_AUTH;
+      case "DIALOG_ONLY":
+        return LoginBehavior.DIALOG_ONLY;
+      case "KATANA_ONLY":
+        return LoginBehavior.KATANA_ONLY;
+      default:
+        return LoginManager.getInstance().getLoginBehavior();
+    }
+  }
 }

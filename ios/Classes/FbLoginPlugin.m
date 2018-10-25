@@ -59,6 +59,8 @@ FBSDKLoginManager* loginManager;
 
 - (void)logInWithPublishPermissions:(FlutterMethodCall*)call result:(FlutterResult)result {
   NSArray* permissions = call.arguments[@"permissions"];
+  NSString* behavior = call.arguments[@"behavior"];
+  [loginManager setLoginBehavior:[self loginBehaviorFromString:behavior]];
   [loginManager logInWithPublishPermissions:permissions
                          fromViewController:nil
                                     handler:^(FBSDKLoginManagerLoginResult* fbResult, NSError* fbError) {
@@ -69,6 +71,8 @@ FBSDKLoginManager* loginManager;
 
 - (void)logInWithReadPermissions:(FlutterMethodCall*)call result:(FlutterResult)result {
   NSArray* permissions = call.arguments[@"permissions"];
+  NSString* behavior = call.arguments[@"behavior"];
+  [loginManager setLoginBehavior:[self loginBehaviorFromString:behavior]];
   [loginManager logInWithReadPermissions:permissions
                       fromViewController:nil
                                  handler:^(FBSDKLoginManagerLoginResult* fbResult, NSError* fbError) {
@@ -97,6 +101,22 @@ FBSDKLoginManager* loginManager;
                  @"accessToken": [FbAccessToken parsedToken: [fbResult token]]
                  });
   }
+}
+
+- (FBSDKLoginBehavior)loginBehaviorFromString:(NSString*) behavior {
+  FBSDKLoginBehavior fbLoginBehavior = [loginManager loginBehavior];
+  
+  if ([@"NATIVE_ONLY" isEqualToString:behavior]) {
+    fbLoginBehavior = FBSDKLoginBehaviorNative;
+  } else if ([@"NATIVE_WITH_FALLBACK" isEqualToString:behavior]) {
+    fbLoginBehavior = FBSDKLoginBehaviorSystemAccount;
+  } else if ([@"WEB_ONLY" isEqualToString:behavior]) {
+    fbLoginBehavior = FBSDKLoginBehaviorWeb;
+  } else if ([@"WEB_VIEW_ONLY" isEqualToString:behavior]) {
+    fbLoginBehavior = FBSDKLoginBehaviorBrowser;
+  }
+  
+  return fbLoginBehavior;
 }
 
 @end

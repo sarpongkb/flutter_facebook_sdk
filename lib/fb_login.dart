@@ -9,7 +9,8 @@ class FbLogin {
       MethodChannel('com.sarpongkb/flutter_facebook_sdk/fb_login');
 
   static Future<FbAccessToken> getCurrentAccessToken() async {
-    Map<dynamic, dynamic> token = await _channel.invokeMethod("getCurrentAccessToken");
+    Map<dynamic, dynamic> token =
+        await _channel.invokeMethod("getCurrentAccessToken");
     return FbAccessToken.fromMap(Map<String, dynamic>.from(token));
   }
 
@@ -19,21 +20,27 @@ class FbLogin {
   }
 
   static Future<FbLoginResult> logInWithPublishPermissions(
-    List<String> permissions,
-  ) async {
+      List<String> permissions,
+      {FbLoginBehavior behavior}) async {
     Map<dynamic, dynamic> result = await _channel.invokeMethod(
       "logInWithPublishPermissions",
-      {"permissions": permissions},
+      {
+        "permissions": permissions,
+        "behavior": behavior,
+      },
     );
     return _handleLoginResult(result);
   }
 
   static Future<FbLoginResult> logInWithReadPermissions(
-    List<String> permissions,
-  ) async {
+      List<String> permissions,
+      {FbLoginBehavior behavior}) async {
     Map<dynamic, dynamic> result = await _channel.invokeMethod(
       "logInWithReadPermissions",
-      {"permissions": permissions},
+      {
+        "permissions": permissions,
+        "behavior": behavior,
+      },
     );
     return _handleLoginResult(result);
   }
@@ -83,6 +90,18 @@ class FbLoginResult {
         "errorMessage: $errorMessage"
         "}";
   }
+}
+
+class FbLoginBehavior {
+  FbLoginBehavior._();
+
+  static final String nativeOnly = "NATIVE_ONLY";
+  static final String nativeWithFallBack = "NATIVE_WITH_FALLBACK";
+  static final String webOnly = "WEB_ONLY";
+  static final String webViewOnly = "WEB_VIEW_ONLY";
+//  static final String deviceAuth = "DEVICE_AUTH";
+//  static final String dialogOnly = "DIALOG_ONLY";
+//  static final String katanaOnly = "KATANA_ONLY";
 }
 
 enum FbLoginStatus {
