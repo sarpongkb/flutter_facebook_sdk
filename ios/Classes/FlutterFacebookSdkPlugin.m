@@ -3,6 +3,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FbLoginPlugin.h"
+#import "FbAccessTokenPlugin.h"
 
 @implementation FlutterFacebookSdkPlugin
 
@@ -11,6 +12,7 @@
   [registrar addApplicationDelegate:instance];
     
   [FbLoginPlugin registerWithRegistrar:registrar];
+  [FbAccessTokenPlugin registerWithRegistrar:registrar];
 }
   
   

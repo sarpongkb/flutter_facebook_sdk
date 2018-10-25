@@ -1,4 +1,5 @@
 import 'dart:core';
+
 import 'package:flutter/services.dart';
 
 class FbAccessToken {
@@ -11,35 +12,36 @@ class FbAccessToken {
   final String tokenString;
   final String userId;
 
+  static const Map<String, dynamic> emptyTokenMap = <String, dynamic>{
+    "declinedPermissions": <String>[],
+    "permissions": <String>[],
+  };
+
   static const MethodChannel _channel =
-  MethodChannel('com.sarpongkb/flutter_facebook_sdk/fb_access_token');
+      MethodChannel('com.sarpongkb/flutter_facebook_sdk/fb_access_token');
 
   static Future<FbAccessToken> get currentAccessToken async {
     Map<dynamic, dynamic> token =
-    await _channel.invokeMethod("getCurrentAccessToken");
-    return FbAccessToken.fromMap(Map<String, dynamic>.from(token));
+        await _channel.invokeMethod("getCurrentAccessToken");
+    return FbAccessToken.fromMap(
+      Map<String, dynamic>.from(token ?? <dynamic, dynamic>{
+        "declinedPermissions": <String>[],
+        "permissions": <String>[],
+      }),
+    );
   }
 
   FbAccessToken.fromMap(Map<String, dynamic> tokenMap)
       : appId = tokenMap["appId"] as String,
-        declinedPermissions =
+        declinedPermissions = tokenMap == null ? <String>[] :
             List<String>.from(tokenMap["declinedPermissions"] as List<dynamic>),
         expirationTime = tokenMap["expirationTime"] as int,
         isExpired = tokenMap["isExpired"] as bool,
-        permissions =
+        permissions = tokenMap == null ? <String>[] :
             List<String>.from(tokenMap["permissions"] as List<dynamic>),
         refreshTime = tokenMap["refreshTime"] as int,
         tokenString = tokenMap["tokenString"] as String,
-        userId = tokenMap['userId'] as String {
-    assert(appId != null);
-    assert(declinedPermissions != null);
-    assert(expirationTime != null);
-    assert(isExpired != null);
-    assert(permissions != null);
-    assert(refreshTime != null);
-    assert(tokenString != null);
-    assert(userId != null);
-  }
+        userId = tokenMap['userId'] as String;
 
   @override
   String toString() {
