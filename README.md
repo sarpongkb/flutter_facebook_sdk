@@ -1,6 +1,6 @@
 # flutter_facebook_sdk
 
-A new flutter plugin project.
+A flutter plugin (unofficial) for facebook sdk.
 
 ## Getting Started
 

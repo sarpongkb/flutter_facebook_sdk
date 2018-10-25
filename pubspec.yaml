@@ -1,7 +1,7 @@
 name: flutter_facebook_sdk
-description: A new flutter plugin project.
-version: 0.0.1
-author:
+description: A flutter plugin (unofficial) for facebook sdk.
+version: 0.1.0
+author: BM Sarpong
 homepage:
 
 environment:
