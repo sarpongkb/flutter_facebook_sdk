@@ -8,12 +8,6 @@ class FbLogin {
   static const MethodChannel _channel =
       MethodChannel('com.sarpongkb/flutter_facebook_sdk/fb_login');
 
-  static Future<FbAccessToken> getCurrentAccessToken() async {
-    Map<dynamic, dynamic> token =
-        await _channel.invokeMethod("getCurrentAccessToken");
-    return FbAccessToken.fromMap(Map<String, dynamic>.from(token));
-  }
-
   static Future<bool> isLoggedIn() async {
     bool loggedIn = await _channel.invokeMethod("isLoggedIn");
     return loggedIn;
@@ -21,12 +15,12 @@ class FbLogin {
 
   static Future<FbLoginResult> logInWithPublishPermissions(
       List<String> permissions,
-      {FbLoginBehavior behavior}) async {
+      {FbLoginBehavior fbLoginBehavior = const FbLoginBehavior.unChanged()}) async {
     Map<dynamic, dynamic> result = await _channel.invokeMethod(
       "logInWithPublishPermissions",
       {
         "permissions": permissions,
-        "behavior": behavior,
+        "behavior": fbLoginBehavior.behavior,
       },
     );
     return _handleLoginResult(result);
@@ -34,12 +28,12 @@ class FbLogin {
 
   static Future<FbLoginResult> logInWithReadPermissions(
       List<String> permissions,
-      {FbLoginBehavior behavior}) async {
+      {FbLoginBehavior fbLoginBehavior = const FbLoginBehavior.unChanged()}) async {
     Map<dynamic, dynamic> result = await _channel.invokeMethod(
       "logInWithReadPermissions",
       {
         "permissions": permissions,
-        "behavior": behavior,
+        "behavior": fbLoginBehavior.behavior,
       },
     );
     return _handleLoginResult(result);
@@ -93,15 +87,16 @@ class FbLoginResult {
 }
 
 class FbLoginBehavior {
-  FbLoginBehavior._();
+  final String behavior;
 
-  static final String nativeOnly = "NATIVE_ONLY";
-  static final String nativeWithFallBack = "NATIVE_WITH_FALLBACK";
-  static final String webOnly = "WEB_ONLY";
-  static final String webViewOnly = "WEB_VIEW_ONLY";
-//  static final String deviceAuth = "DEVICE_AUTH";
-//  static final String dialogOnly = "DIALOG_ONLY";
-//  static final String katanaOnly = "KATANA_ONLY";
+  const FbLoginBehavior.unChanged(): behavior = "";
+  const FbLoginBehavior.nativeOnly(): behavior = "NATIVE_ONLY";
+  const FbLoginBehavior.nativeWithFallBack(): behavior = "NATIVE_WITH_FALLBACK";
+  const FbLoginBehavior.webOnly(): behavior = "WEB_ONLY";
+  const FbLoginBehavior.webViewOnly(): behavior = "WEB_VIEW_ONLY";
+//  const FbLoginBehavior.deviceAuth(): behavior = "DEVICE_AUTH";
+//  const FbLoginBehavior.dialogOnly(): behavior = "DIALOG_ONLY";
+//  const FbLoginBehavior.katanaOnly(): behavior = "KATANA_ONLY";
 }
 
 enum FbLoginStatus {

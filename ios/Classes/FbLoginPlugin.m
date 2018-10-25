@@ -3,7 +3,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-#import "FbAccessToken.h"
+#import "FbAccessTokenPlugin.h"
 
 @implementation FbLoginPlugin
 
@@ -27,27 +27,17 @@ FBSDKLoginManager* loginManager;
 
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"getCurrentAccessToken" isEqualToString:call.method]) {
-    [self getCurrentAccessToken:result];
-  } else if ([@"isLoggedIn" isEqualToString:call.method]) {
-      [self isLoggedIn:result];
-  } else if ([@"getCurrentAccessToken" isEqualToString:call.method]) {
-      [self getCurrentAccessToken:result];
+  if ([@"isLoggedIn" isEqualToString:call.method]) {
+    [self isLoggedIn:result];
   } else if ([@"logInWithPublishPermissions" isEqualToString:call.method]) {
     [self logInWithPublishPermissions:call result:result];
   } else if ([@"logInWithReadPermissions" isEqualToString:call.method]) {
-      [self logInWithReadPermissions:call result:result];
+    [self logInWithReadPermissions:call result:result];
   } else if ([@"logOut" isEqualToString:call.method]) {
-      [self logOut:result];
+    [self logOut:result];
   } else {
-      result(FlutterMethodNotImplemented);
+    result(FlutterMethodNotImplemented);
   }
-}
-
-
-- (void)getCurrentAccessToken:(FlutterResult)result {
-  FBSDKAccessToken* token = [FBSDKAccessToken currentAccessToken];
-  result(token == nil ? nil : [FbAccessToken parsedToken:token]);
 }
 
 
@@ -98,7 +88,7 @@ FBSDKLoginManager* loginManager;
     fltResult(@{@"status": @"CANCELED"});
   } else {
     fltResult(@{ @"status": @"LOGGED_IN",
-                 @"accessToken": [FbAccessToken parsedToken: [fbResult token]]
+                 @"accessToken": [FbAccessTokenPlugin parsedToken: [fbResult token]]
                  });
   }
 }
@@ -120,4 +110,3 @@ FBSDKLoginManager* loginManager;
 }
 
 @end
-

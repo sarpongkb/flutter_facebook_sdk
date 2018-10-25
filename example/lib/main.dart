@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_sdk/fb_login.dart';
+import 'package:flutter_facebook_sdk/fb_sdk.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,8 +31,8 @@ class _MyAppState extends State<MyApp> {
       loginResult =
           await FbLogin.logInWithReadPermissions(["public_profile"]);
       loggedIn = await FbLogin.isLoggedIn();
-    } on PlatformException {
-      print('Failed to get platform version.');
+    } on PlatformException catch (e){
+      print('Failed to get platform version. $e');
     }
 
     // If the widget was removed from the tree while the asynchronous platform

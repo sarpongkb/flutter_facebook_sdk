@@ -1,7 +1,6 @@
 package com.sarpongkb.flutterfacebooksdk;
 
 import android.content.Intent;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -30,38 +29,37 @@ public class FbLoginPlugin  implements MethodCallHandler {
   private final CallbackManager callbackManager = CallbackManager.Factory.create();
   private final ResultDelegate resultDelegate = new ResultDelegate(callbackManager);
 
-  public FbLoginPlugin(Registrar registrar) {
+  private FbLoginPlugin(Registrar registrar) {
     this.registrar = registrar;
     this.registrar.addActivityResultListener(resultDelegate);
     LoginManager.getInstance().registerCallback(callbackManager, resultDelegate);
   }
 
   /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
+  static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(new FbLoginPlugin(registrar));
   }
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
-      if (call.method.equals("getCurrentAccessToken")) {
-          getCurrentAccessToken(result);
-      } else if (call.method.equals("isLoggedIn")) {
+    switch (call.method) {
+      case "isLoggedIn":
         isLoggedIn(result);
-      } else if (call.method.equals("logInWithPublishPermissions")) {
+        break;
+      case "logInWithPublishPermissions":
         logInWithPublishPermissions(call, result);
-      } else if (call.method.equals("logInWithReadPermissions")) {
-          logInWithReadPermissions(call, result);
-      } else if (call.method.equals("logOut")) {
+        break;
+      case "logInWithReadPermissions":
+        logInWithReadPermissions(call, result);
+        break;
+      case "logOut":
         logOut(result);
-      } else {
-          result.notImplemented();
-      }
-  }
-
-  private void getCurrentAccessToken(Result result) {
-    AccessToken token = AccessToken.getCurrentAccessToken();
-    result.success(token == null ? null : FbAccessToken.parsedToken(token));
+        break;
+      default:
+        result.notImplemented();
+        break;
+    }
   }
 
   private void isLoggedIn(Result result) {
@@ -95,11 +93,11 @@ public class FbLoginPlugin  implements MethodCallHandler {
     private Result result;
     final private CallbackManager callbackManager;
 
-    public ResultDelegate(CallbackManager callbackManager) {
+    ResultDelegate(CallbackManager callbackManager) {
       this.callbackManager = callbackManager;
     }
 
-    public void setResult(Result result) {
+    void setResult(Result result) {
         this.result = result;
     }
 
@@ -107,7 +105,7 @@ public class FbLoginPlugin  implements MethodCallHandler {
     public void onSuccess(LoginResult loginResult) {
       Map<String, Object> res = new HashMap<>();
       res.put("status", "LOGGED_IN");
-      res.put("accessToken", FbAccessToken.parsedToken(loginResult.getAccessToken()));
+      res.put("accessToken", FbAccessTokenPlugin.parsedToken(loginResult.getAccessToken()));
       result.success(res);
     }
 

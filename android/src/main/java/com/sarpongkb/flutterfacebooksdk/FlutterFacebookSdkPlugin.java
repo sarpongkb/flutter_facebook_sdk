@@ -8,5 +8,6 @@ public class FlutterFacebookSdkPlugin {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     FbLoginPlugin.registerWith(registrar);
+    FbAccessTokenPlugin.registerWith(registrar);
   }
 }

@@ -2,8 +2,9 @@
 #define FbAccessToken_h
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <Flutter/Flutter.h>
 
-@interface FbAccessToken : NSObject
+@interface FbAccessTokenPlugin : NSObject<FlutterPlugin>
   +(NSDictionary*) parsedToken:(FBSDKAccessToken*)token;
 @end
 

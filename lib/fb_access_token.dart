@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:flutter/services.dart';
 
 class FbAccessToken {
   final String appId;
@@ -10,23 +11,14 @@ class FbAccessToken {
   final String tokenString;
   final String userId;
 
-//  const FbAccessToken({
-//    @required this.appId,
-//    @required this.declinedPermissions,
-//    @required this.expirationTime,
-//    @required this.isExpired,
-//    @required this.permissions,
-//    @required this.refreshTime,
-//    @required this.tokenString,
-//    @required this.userId,
-//  })  : assert(appId != null),
-//        assert(declinedPermissions != null),
-//        assert(expirationTime != null),
-//        assert(isExpired != null),
-//        assert(permissions != null),
-//        assert(refreshTime != null),
-//        assert(tokenString != null),
-//        assert(userId != null);
+  static const MethodChannel _channel =
+  MethodChannel('com.sarpongkb/flutter_facebook_sdk/fb_access_token');
+
+  static Future<FbAccessToken> get currentAccessToken async {
+    Map<dynamic, dynamic> token =
+    await _channel.invokeMethod("getCurrentAccessToken");
+    return FbAccessToken.fromMap(Map<String, dynamic>.from(token));
+  }
 
   FbAccessToken.fromMap(Map<String, dynamic> tokenMap)
       : appId = tokenMap["appId"] as String,
