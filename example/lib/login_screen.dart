@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import "package:flutter_facebook_sdk/fb_sdk.dart";
-//import 'dart:async';
+
+const List<String> readPermissions = <String>[
+  FbPermissions.publicProfile,
+//  FbPermissions.email,
+//  FbPermissions.userFriends,
+//  FbPermissions.userAgeRange,
+//  FbPermissions.userBirthday,
+];
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -149,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       FbLoginResult loginResult =
-          await FbLogin.logInWithReadPermissions(["public_profile"]);
+          await FbLogin.logInWithReadPermissions(readPermissions);
       isLoggedIn = await FbLogin.isLoggedIn();
 
       if (loginResult.status == FbLoginStatus.ERROR ||

@@ -94,9 +94,6 @@ class FbLoginBehavior {
   const FbLoginBehavior.nativeWithFallBack(): behavior = "NATIVE_WITH_FALLBACK";
   const FbLoginBehavior.webOnly(): behavior = "WEB_ONLY";
   const FbLoginBehavior.webViewOnly(): behavior = "WEB_VIEW_ONLY";
-//  const FbLoginBehavior.deviceAuth(): behavior = "DEVICE_AUTH";
-//  const FbLoginBehavior.dialogOnly(): behavior = "DIALOG_ONLY";
-//  const FbLoginBehavior.katanaOnly(): behavior = "KATANA_ONLY";
 }
 
 enum FbLoginStatus {
