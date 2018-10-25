@@ -10,7 +10,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLoggedIn;
-  FbLoginStatus _loginStatus;
   FbAccessToken _accessToken;
   String _errorMessage;
 
@@ -34,21 +33,22 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                color: Colors.amberAccent,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Text("errorMessage: $_errorMessage"),
                     Text("isLoggedIn: $_isLoggedIn"),
-                    Text("Login status: $_loginStatus"),
                     Text("appId: ${_accessToken?.appId}"),
-                    Text("declinedPermissions: ${_accessToken?.declinedPermissions}"),
+                    Text(
+                        "declinedPermissions: ${_accessToken?.declinedPermissions}"),
                     Text("expirationTime: ${_accessToken?.expirationTime}"),
                     Text("isExpired: ${_accessToken?.isExpired}"),
                     Text("permissions: ${_accessToken?.permissions}"),
                     Text("refreshTime: ${_accessToken?.refreshTime}"),
-                    Text("tokenString: ${_accessToken?.tokenString}"),
+                    Text(
+                      "tokenString: ${_accessToken == null ? null : '${_accessToken.tokenString.substring(0, 15)}...'}",
+                    ),
                     Text("userId: ${_accessToken?.userId}"),
                   ],
                 ),
@@ -57,6 +57,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
+                  RaisedButton(
+                    onPressed: () => _getCurrentAccessToken(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      "Get current access token",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.indigo,
+                  ),
                   RaisedButton(
                     onPressed: () => _logInWithReadPermissions(),
                     shape: RoundedRectangleBorder(
@@ -88,8 +99,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void _getCurrentAccessToken() async {
+    FbAccessToken accessToken;
+    bool isLoggedIn;
+    String errorMessage;
+
+    try {
+      accessToken = await FbAccessToken.currentAccessToken;
+      isLoggedIn = await FbLogin.isLoggedIn();
+    } on PlatformException catch (e) {
+      errorMessage = e.message;
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoggedIn = isLoggedIn;
+      _accessToken = accessToken;
+      _errorMessage = errorMessage;
+    });
+  }
+
   void _logOut() async {
-    FbLoginStatus loginStatus;
     FbAccessToken accessToken;
     bool isLoggedIn;
     String errorMessage;
@@ -106,14 +137,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() {
       _isLoggedIn = isLoggedIn;
-      _loginStatus = loginStatus;
       _accessToken = accessToken;
       _errorMessage = errorMessage;
     });
   }
 
   void _logInWithReadPermissions() async {
-    FbLoginStatus loginStatus;
     FbAccessToken accessToken;
     bool isLoggedIn;
     String errorMessage;
@@ -123,9 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
           await FbLogin.logInWithReadPermissions(["public_profile"]);
       isLoggedIn = await FbLogin.isLoggedIn();
 
-      loginStatus = loginResult.status;
-      if (loginStatus == FbLoginStatus.ERROR ||
-          loginStatus == FbLoginStatus.CANCELED) {
+      if (loginResult.status == FbLoginStatus.ERROR ||
+          loginResult.status == FbLoginStatus.CANCELED) {
         errorMessage = loginResult.errorMessage;
       } else {
         accessToken = loginResult.accessToken;
@@ -138,7 +166,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() {
       _isLoggedIn = isLoggedIn;
-      _loginStatus = loginStatus;
       _accessToken = accessToken;
       _errorMessage = errorMessage;
     });

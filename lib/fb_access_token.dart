@@ -12,32 +12,25 @@ class FbAccessToken {
   final String tokenString;
   final String userId;
 
-  static const Map<String, dynamic> emptyTokenMap = <String, dynamic>{
-    "declinedPermissions": <String>[],
-    "permissions": <String>[],
-  };
-
   static const MethodChannel _channel =
       MethodChannel('com.sarpongkb/flutter_facebook_sdk/fb_access_token');
 
   static Future<FbAccessToken> get currentAccessToken async {
     Map<dynamic, dynamic> token =
         await _channel.invokeMethod("getCurrentAccessToken");
-    return FbAccessToken.fromMap(
-      Map<String, dynamic>.from(token ?? <dynamic, dynamic>{
-        "declinedPermissions": <String>[],
-        "permissions": <String>[],
-      }),
-    );
+    return token == null
+        ? null
+        : FbAccessToken.fromMap(
+            Map<String, dynamic>.from(token));
   }
 
   FbAccessToken.fromMap(Map<String, dynamic> tokenMap)
       : appId = tokenMap["appId"] as String,
-        declinedPermissions = tokenMap == null ? <String>[] :
+        declinedPermissions =
             List<String>.from(tokenMap["declinedPermissions"] as List<dynamic>),
         expirationTime = tokenMap["expirationTime"] as int,
         isExpired = tokenMap["isExpired"] as bool,
-        permissions = tokenMap == null ? <String>[] :
+        permissions =
             List<String>.from(tokenMap["permissions"] as List<dynamic>),
         refreshTime = tokenMap["refreshTime"] as int,
         tokenString = tokenMap["tokenString"] as String,
