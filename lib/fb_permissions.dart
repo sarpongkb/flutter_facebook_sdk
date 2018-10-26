@@ -5,18 +5,20 @@ class FbPermissions {
   // User data
 
   //public_profile
-//  static const String id = "id";
-//  static const String firstName = "first_name";
-//  static const String lastName = "last_name";
-//  static const String middleName = "middle_name";
-//  static const String name = "name";
-//  static const String nameFormat = "name_format";
-//  static const String picture = "picture";
-//  static const String shortName = "short_name";
+  static const String id = "id";
+  static const String firstName = "first_name";
+  static const String lastName = "last_name";
+  static const String middleName = "middle_name";
+  static const String name = "name";
+  static const String nameFormat = "name_format";
+  static const String picture = "picture";
+  static const String shortName = "short_name";
+
+  static const String publicProfile = "public_profile";
+  static const String publishActions = "publish_actions";
 
   static const String email = "email";
   static const String groupsAccessMemberInfo = "groups_access_member_info";
-  static const String publicProfile = "public_profile";
   static const String publishToGroups = "publish_to_groups";
   static const String userAgeRange = "user_age_range";
   static const String userBirthday = "user_birthday";

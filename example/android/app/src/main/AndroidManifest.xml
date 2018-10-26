@@ -36,6 +36,7 @@
             </intent-filter>
         </activity>
 
+
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
@@ -52,6 +53,11 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.facebook.app.FaceBookContentProvider@string/facebook_app_id"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
 
     </application>
 </manifest>

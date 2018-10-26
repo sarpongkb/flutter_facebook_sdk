@@ -65,6 +65,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   RaisedButton(
+                    onPressed: () => _shareLink(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      "Share link",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  RaisedButton(
                     onPressed: () => _getCurrentAccessToken(),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -104,6 +115,18 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _shareLink() async {
+    try {
+      FbShare.shareLink(
+        linkUrl: "https://www.youtube.com/watch?v=NTJhHn-TuDY",
+        quote: "This is Oscar",
+        hashTag: "#OscarPeterson"
+      );
+    } on PlatformException catch (e) {
+      print("Share error ${e.message}");
+    }
   }
 
   void _getCurrentAccessToken() async {

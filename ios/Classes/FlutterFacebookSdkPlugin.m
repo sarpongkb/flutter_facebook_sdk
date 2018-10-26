@@ -4,6 +4,7 @@
 
 #import "FbLoginPlugin.h"
 #import "FbAccessTokenPlugin.h"
+#import "FbSharePlugin.h"
 
 @implementation FlutterFacebookSdkPlugin
 
@@ -13,6 +14,7 @@
     
   [FbLoginPlugin registerWithRegistrar:registrar];
   [FbAccessTokenPlugin registerWithRegistrar:registrar];
+  [FbSharePlugin registerWithRegistrar:registrar];
 }
   
   
